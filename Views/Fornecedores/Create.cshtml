@@ -1,0 +1,91 @@
+@model CadastroFornecedor.Models.Fornecedor
+
+@{
+    ViewData["Title"] = "Novo Fornecedor";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Nome"></label>
+        <input asp-for="Nome" class="form-control" />
+        <span asp-validation-for="Nome" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CNPJ"></label>
+        <input asp-for="CNPJ" class="form-control" />
+        <span asp-validation-for="CNPJ" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Segmento"></label>
+        <select asp-for="Segmento" class="form-control">
+            <option value="Comércio">Comércio</option>
+            <option value="Serviço">Serviço</option>
+            <option value="Indústria">Indústria</option>
+        </select>
+        <span asp-validation-for="Segmento" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CEP"></label>
+        <input asp-for="CEP" class="form-control" id="cep" />
+        <span asp-validation-for="CEP" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Endereco"></label>
+        <input asp-for="Endereco" class="form-control" id="endereco" readonly />
+        <span asp-validation-for="Endereco" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ImagemUrl"></label>
+        <input asp-for="ImagemUrl" name="Imagem" type="file" class="form-control" />
+        <span asp-validation-for="ImagemUrl" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            function limpa_formulário_cep() {
+                $("#endereco").val("");
+            }
+            function validarArquivoPNG() {
+                $('input[name="Imagem"]').change(function() {
+                    const file = this.files[0];
+                    if (file && file.type !== 'image/png') {
+                        alert('O arquivo deve ser um PNG.');
+                        this.value = '';
+                    }
+                });
+            }
+            $("#cep").blur(function () {
+                var cep = $(this).val().replace(/\D/g, '');
+
+                if (cep) {
+                    var validacep = /^[0-9]{8}$/;
+
+                    if (validacep.test(cep)) {
+                        $("#endereco").val("Buscando...");
+
+                        $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
+                            if (!("erro" in dados)) {
+                                $("#endereco").val(dados.logradouro + ", " + dados.bairro + ", " + dados.localidade + " - " + dados.uf);
+                            } else {
+                                limpa_formulário_cep();
+                                alert("CEP não encontrado.");
+                            }
+                        });
+                    } else {
+                        limpa_formulário_cep();
+                        alert("Formato de CEP inválido.");
+                    }
+                } else {
+                    limpa_formulário_cep();
+                }
+            });
+            validarArquivoPNG();
+        });
+    </script>
+}

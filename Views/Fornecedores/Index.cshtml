@@ -1,0 +1,80 @@
+@model IEnumerable<CadastroFornecedor.Models.Fornecedor>
+
+@{
+    ViewData["Title"] = "Lista de Fornecedores";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Novo Fornecedor</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CNPJ)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Segmento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CEP)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Endereco)
+            </th>
+            <th>
+                Imagem
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CNPJ)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Segmento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CEP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Endereco)
+            </td>
+            <td>
+                @if (!string.IsNullOrEmpty(item.ImagemUrl))
+                {
+                    <img src="@item.ImagemUrl" alt="Imagem do Fornecedor" style="width: 100px; height: auto;" />
+                }
+                else
+                {
+                    <span>Sem Imagem</span>
+                }
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-info">Detalhes</a> |
+                <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-sm btn-warning">Editar</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-sm btn-danger">Excluir</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

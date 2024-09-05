@@ -1,0 +1,15 @@
+@{
+    ViewData["Title"] = "Cadastro Concluído";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <img src="~/images/cliente.png" alt="Cadastro realizado com sucesso" style="width: 300px; height: auto;" />
+</p>
+
+<p>@TempData["SuccessMessage"]</p>
+
+<p>
+    <a asp-action="Index" class="btn btn-primary">Voltar para a lista de fornecedores</a>
+</p>
